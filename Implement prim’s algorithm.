@@ -1,0 +1,47 @@
+#include <iostream>
+#include <vector>
+#include <climits>
+using namespace std;
+int main() {
+    int v, e;
+    cout << "Enter vertices and edges: ";
+    cin >> v >> e;
+    vector<vector<int>> cost(v, vector<int>(v, 0));
+    cout << "Enter edges (u v weight):\n";
+    for (int i = 0; i < e; i++) {
+        int u, w, weight;
+        cin >> u >> w >> weight;
+        cost[u][w] = weight;
+        cost[w][u] = weight;
+    }
+    vector<bool> visited(v, false);
+    visited[0] = true;
+    int totalCost = 0;
+    cout << "Edges in MST:\n";
+    for (int count = 0; count < v - 1; count++) {
+        int minCost = INT_MAX;
+        int x = -1, y = -1;
+        for (int i = 0; i < v; i++) {
+            if (visited[i]) {
+                for (int j = 0; j < v; j++) {
+                    if (!visited[j] && cost[i][j] > 0 &&
+                        cost[i][j] < minCost) {
+                        minCost = cost[i][j];
+                        x = i;
+                        y = j;
+                    }
+                }
+            }
+        }
+        if (x == -1) {
+            cout << "Graph is not connected.\n";
+            return 0;
+        }
+        cout << x << " - " << y
+             << " : " << minCost << "\n";
+        totalCost += minCost;
+        visited[y] = true;
+    }
+    cout << "Total cost of MST = " << totalCost << "\n";
+    return 0;
+}
